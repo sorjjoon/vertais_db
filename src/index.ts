@@ -23,6 +23,7 @@ import { Session } from "./entities/Session";
 import { ErrorInterceptor } from "./server/middlewares";
 import { createApollo } from "./apollo.config";
 import compression from "compression";
+import { multiMap } from "./utils/utils";
 
 function httpAndHttpsUrls(domain: string) {
   return ["http://" + domain, "https://" + domain];
@@ -39,9 +40,11 @@ const main = async () => {
   app.use(compression());
   console.log("Compression ok");
 
+  const corsDomains = multiMap(["vertais.fi", "www.vertais.fi", "localhost:3000"], httpAndHttpsUrls);
+
   app.use(
     cors({
-      origin: [...httpAndHttpsUrls("vertais.fi"), ...httpAndHttpsUrls("www.vertais.fi"), "http://localhost:3000"],
+      origin: corsDomains,
       credentials: true,
     })
   );
@@ -88,7 +91,7 @@ const main = async () => {
 
   const apolloSever = await createApollo();
 
-  apolloSever.applyMiddleware({ app });
+  apolloSever.applyMiddleware({ app, cors: { origin: corsDomains, credentials: true } });
 
   console.log("Cleaning session");
 
