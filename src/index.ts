@@ -88,7 +88,7 @@ const main = async () => {
 
   const apolloSever = await createApollo();
 
-  apolloSever.applyMiddleware({ app, cors: { origin: "http://localhost:3000", credentials: true } });
+  apolloSever.applyMiddleware({ app });
 
   console.log("Cleaning session");
 
