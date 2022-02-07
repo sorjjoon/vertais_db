@@ -22,6 +22,7 @@ import { TypeormStore } from "connect-typeorm/out";
 import { Session } from "./entities/Session";
 import { ErrorInterceptor } from "./server/middlewares";
 import { createApollo } from "./apollo.config";
+import compression from "compression";
 
 function httpAndHttpsUrls(domain: string) {
   return ["http://" + domain, "https://" + domain];
@@ -33,7 +34,10 @@ const main = async () => {
   const app = express();
   const port = parseInt(process.env.PORT!) || 5000;
 
-  //Logging
+  //compression
+  console.log("Compression config");
+  app.use(compression());
+  console.log("Compression ok");
 
   app.use(
     cors({
@@ -59,6 +63,7 @@ const main = async () => {
   });
 
   const store = new TypeormStore({ cleanupLimit: 10 }).connect(repo);
+  app.set("trust proxy", true);
   app.use(
     session({
       rolling: false,
