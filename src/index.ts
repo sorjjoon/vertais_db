@@ -9,7 +9,7 @@ import session from "express-session";
 import { MyContext, SqlErrorCodes } from "./types";
 import cors from "cors";
 import { COOKIE_NAME, __prod__ } from "./server/constant";
-import argon2 from "argon2";
+
 import { customAuthChecker } from "./server/auth";
 import { Account, UserRole } from "./entities/Account";
 import { graphqlUploadExpress } from "graphql-upload";

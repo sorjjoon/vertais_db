@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Resolver, Query, Ctx, Arg, Mutation, InputType, Field } from "type-graphql";
 import { MyContext, Nullish, SqlErrorCodes, UserError } from "../types";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 import { Account, UserRole } from "../entities/Account";
 import { AccountResponse } from "./types";
 import { validUsername } from "../utils/utils";
@@ -11,6 +11,32 @@ import { randomBytes } from "crypto";
 import { PasswordResetToken } from "../entities/PasswordResetToken";
 import { MoreThanOrEqual } from "typeorm";
 import { logoutUser } from "../server/auth";
+
+const saltRounds = 10;
+
+function hashPassword(plainText: string) {
+  return new Promise<string>((resolve, reject) => {
+    bcrypt.hash(plainText, saltRounds, (err, hash) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(hash);
+      }
+    });
+  });
+}
+
+function comparePassword(plainText: string, hashedPassword: string) {
+  return new Promise<boolean>((resolve, reject) => {
+    bcrypt.compare(plainText, hashedPassword, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
 
 @InputType()
 class UsernamePasswordInput {
@@ -45,7 +71,7 @@ export class AccountResolver {
     if (!credentials.password) {
       response.errors?.push({ fieldName: "password", message: "Salasana ei voi olla tyhjä" });
     } else if (!response.errors.length) {
-      const hash = await argon2.hash(credentials.password);
+      const hash = await hashPassword(credentials.password);
       const user = Account.create({
         username: credentials.username,
         role,
@@ -149,7 +175,7 @@ export class AccountResolver {
     } else if (!credentials.password) {
       response.errors?.push({ fieldName: "password", message: "Väärä salasana" });
     } else {
-      const validPwd = await argon2.verify(user.password, credentials.password);
+      const validPwd = await comparePassword(credentials.password, user.password);
       if (!validPwd) {
         response.errors?.push({ fieldName: "password", message: "Väärä salasana" });
       } else {
@@ -232,7 +258,7 @@ export class AccountResolver {
 
     if (!response.errors?.length) {
       if (credentials.password) {
-        response.user.password = await argon2.hash(credentials.password);
+        response.user.password = await hashPassword(credentials.password);
       }
       if (credentials.username) {
         response.user.username = credentials.username;
