@@ -7,6 +7,7 @@ import { Course } from "./entities/Course";
 import { PeerAssesmentAssignment } from "./entities/PeerAssesmentAssignment";
 export enum SqlErrorCodes {
   UNIQUE_VIOLATION = "23505",
+  CHECK_VIOLATION = "23514",
   SERILALIZATION_FAILURE = "40001",
 }
 
