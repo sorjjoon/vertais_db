@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { ObjectType, Field } from "type-graphql";
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn, Unique } from "typeorm";
 import { BaseWithPrimary } from "./Base";

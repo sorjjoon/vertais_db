@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { ISession } from "connect-typeorm";
 import { Column, Entity, Index, PrimaryColumn } from "typeorm";
 import { Base } from "./Base";

@@ -1,10 +1,10 @@
 import "reflect-metadata";
+
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryColumn, Unique } from "typeorm";
-import { BaseWithOwner, BaseWithOwnerNoPrimary } from "./Base";
+import { Column, Entity, ManyToOne } from "typeorm";
+import { BaseWithOwner } from "./Base";
 import { Grade } from "./Grade";
 import { PeerAssesmentPair } from "./PeerAssesmentPair";
-import { Submit } from "./Submit";
 
 @ObjectType()
 @Entity()

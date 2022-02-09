@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { Request, Response } from "express";
 import { Session } from "express-session";
 import { Account } from "./entities/Account";
@@ -6,6 +7,7 @@ import { Course } from "./entities/Course";
 import { PeerAssesmentAssignment } from "./entities/PeerAssesmentAssignment";
 export enum SqlErrorCodes {
   UNIQUE_VIOLATION = "23505",
+  SERILALIZATION_FAILURE = "40001",
 }
 
 export type MyContext = {
@@ -30,5 +32,3 @@ export class UserError extends Error {
 }
 
 export type Nullish = undefined | null;
-
-// export type OrmType = Omit<MikroORM<IDatabaseDriver<Connection>>, keyof { em: EntityManager }> & { em: EntityManager };

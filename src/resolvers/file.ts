@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { FileUpload, GraphQLUpload } from "graphql-upload";
 import { Arg, Authorized, Ctx, Int, Mutation, Resolver } from "type-graphql";
 import { FileDetails } from "../entities/FileDetails";

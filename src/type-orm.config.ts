@@ -1,7 +1,7 @@
 import "reflect-metadata";
+
 import { MAX_LOG_MESSAGE_LENGTH, __prod__ } from "./server/constant";
-import path from "path";
-import { AdvancedConsoleLogger, createConnection, QueryRunner } from "typeorm";
+import { AdvancedConsoleLogger, QueryRunner } from "typeorm";
 
 import { SqlErrorCodes } from "./types";
 class CustomLogger extends AdvancedConsoleLogger {

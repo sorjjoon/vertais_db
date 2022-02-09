@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { ArgsType, Field, InputType, Int, ObjectType } from "type-graphql";
 import { Account } from "../entities/Account";
 import { Assignment } from "../entities/Assignment";

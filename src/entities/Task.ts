@@ -10,7 +10,6 @@ import { Submit } from "./Submit";
 
 @ObjectType()
 @Entity()
-// @Unique("UQ_number_assignment_id", ["number", "assignment"])
 export class Task extends BaseWithOwner {
   @Field(() => String, { nullable: true, description: "Sanitized html content" })
   @Column({ nullable: true, type: "text" })

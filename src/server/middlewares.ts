@@ -3,36 +3,30 @@ import { MiddlewareFn } from "type-graphql";
 import { getConnection } from "typeorm";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 import { MyContext, UserError } from "../types";
-import { multiMap, sleep } from "../utils/utils";
+import { multiMap } from "../utils/utils";
 import { UNAUTHORIZED_ACCESS_ERROR_MESSAGE, __prod__ } from "./constant";
 import * as _ from "lodash";
 import { PeerAssesmentPair } from "../entities/PeerAssesmentPair";
 import console from "console";
-export const LoggerInterCeptor: MiddlewareFn<any> = async ({ context, info }, next) => {
-  // console.log("variables: ", info.variableValues);
-  return next();
-};
 
 export const ErrorInterceptor: MiddlewareFn<MyContext> = async ({ args, context, info, root }, next) => {
   try {
     return await next();
   } catch (err) {
     if (!(err instanceof UserError) && !(err instanceof AuthenticationError)) {
-      console.log("Unknown error!");
+      console.error("Unknown error!");
       console.error(err);
-      console.log("root", root);
-      console.log("args", args);
-      console.log("user", context.user);
-      console.log("fieldName", info.fieldName);
-      console.log("op", info.operation);
+      console.error("root", root);
+      console.error("args", args);
+      console.error("user", context.user);
+      console.error("fieldName", info.fieldName);
+      console.error("op", info.operation);
       if (__prod__) {
         throw new Error("Jokin meni pieleen, pahoittelumme");
       }
     } else if (!__prod__) {
       console.error(err);
     }
-
-    // rethrow the error
     throw err;
   }
 };

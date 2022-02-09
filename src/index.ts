@@ -1,17 +1,12 @@
 import "reflect-metadata";
-require("source-map-support").install();
-import express from "express";
-import { ApolloServer, AuthenticationError } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { format } from "util";
 
+require("source-map-support").install();
+
+import express from "express";
 import session from "express-session";
-import { MyContext, SqlErrorCodes } from "./types";
 import cors from "cors";
 import { COOKIE_NAME, __prod__ } from "./server/constant";
 
-import { customAuthChecker } from "./server/auth";
-import { Account, UserRole } from "./entities/Account";
 import { graphqlUploadExpress } from "graphql-upload";
 import { FileBlob } from "./entities/FileBlob";
 import { FileDetails } from "./entities/FileDetails";
@@ -20,7 +15,6 @@ import { createConnection, getConnectionOptions, LessThan } from "typeorm";
 import typeOrmConfig from "./type-orm.config";
 import { TypeormStore } from "connect-typeorm/out";
 import { Session } from "./entities/Session";
-import { ErrorInterceptor } from "./server/middlewares";
 import { createApollo } from "./apollo.config";
 import compression from "compression";
 import { multiMap } from "./utils/utils";
@@ -35,7 +29,6 @@ const main = async () => {
   const app = express();
   const port = parseInt(process.env.PORT!) || 5000;
 
-  //compression
   console.log("Compression config");
   app.use(compression());
   console.log("Compression ok");
@@ -83,7 +76,6 @@ const main = async () => {
       store,
     })
   );
-  // );
   console.log("Session config success");
   console.log("Configuring file upload");
   app.use(graphqlUploadExpress({ maxFileSize: 100 * 1024 * 1024, maxFiles: 10 }));

@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { FileDetails } from "../entities/FileDetails";
 import { MyContext, UserError } from "../types";

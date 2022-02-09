@@ -1,12 +1,8 @@
 import "reflect-metadata";
 
-import { Authorized, Field, InputType, Int, ObjectType } from "type-graphql";
-import { Course } from "./Course";
-import { Task } from "./Task";
-import { BaseWithOwner, dateTimeColumnType } from "./Base";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
-import { FileDetails } from "./FileDetails";
-import { AssignmentOptions } from "./AssignmentOptions";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { dateTimeColumnType } from "./Base";
+import { Column } from "typeorm";
 
 @ObjectType()
 @InputType("PeerAssesmentOptionsInput", { description: "PeerAssesment options" })

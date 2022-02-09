@@ -4,7 +4,7 @@ import { buildSchema } from "type-graphql";
 import { Account } from "./entities/Account";
 import { customAuthChecker } from "./server/auth";
 import { __prod__ } from "./server/constant";
-import { ErrorInterceptor, LoggerInterCeptor } from "./server/middlewares";
+import { ErrorInterceptor } from "./server/middlewares";
 import { MyContext } from "./types";
 
 export async function createApollo(opts: ApolloServerExpressConfig = {}) {
@@ -26,7 +26,7 @@ export async function createApollo(opts: ApolloServerExpressConfig = {}) {
       validate: false,
       dateScalarMode: "isoDate",
       authChecker: customAuthChecker,
-      globalMiddlewares: [ErrorInterceptor, LoggerInterCeptor],
+      globalMiddlewares: [ErrorInterceptor],
     }),
     uploads: false,
     context: ({ req, res }): MyContext => ({

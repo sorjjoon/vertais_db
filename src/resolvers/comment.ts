@@ -1,9 +1,9 @@
-import { FileUpload, GraphQLUpload } from "graphql-upload";
 import "reflect-metadata";
+
+import { FileUpload, GraphQLUpload } from "graphql-upload";
 import { Arg, Ctx, Mutation, Resolver, Int, Query, Authorized } from "type-graphql";
 import { In, LessThan } from "typeorm";
 import { Account } from "../entities/Account";
-
 import { Comment } from "../entities/Comment";
 import { Course } from "../entities/Course";
 import { FileDetails } from "../entities/FileDetails";

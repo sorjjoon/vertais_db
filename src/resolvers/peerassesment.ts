@@ -1,11 +1,9 @@
 import "reflect-metadata";
-import { Arg, Ctx, Resolver, Int, UseMiddleware, Query, Authorized, Mutation } from "type-graphql";
-import { In } from "typeorm";
-import { UserRole } from "../entities/Account";
 
+import { Arg, Ctx, Resolver, Int, UseMiddleware, Query, Authorized, Mutation } from "type-graphql";
+import { UserRole } from "../entities/Account";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 import { PeerAssesmentPair } from "../entities/PeerAssesmentPair";
-import { Submit } from "../entities/Submit";
 import { ensurePeerAssesmentPairsAreGenerated } from "../server/middlewares";
 import { MyContext } from "../types";
 

@@ -1,6 +1,7 @@
 import "reflect-metadata";
+
 import { Course } from "../entities/Course";
-import { Resolver, Query, Ctx, Arg, Int, Mutation, Authorized, UseMiddleware } from "type-graphql";
+import { Resolver, Query, Ctx, Arg, Int, Mutation, Authorized } from "type-graphql";
 import { MyContext, Nullish, SqlErrorCodes, UserError } from "../types";
 import { filterKeys, generateRandomRichText, nextYear, randomString, yesterday } from "../utils/utils";
 import { Account, UserRole } from "../entities/Account";
@@ -14,7 +15,6 @@ import { Task } from "../entities/Task";
 import { Submit } from "../entities/Submit";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 import { __prod__ } from "../server/constant";
-import { getCourseAssignmentsQueryBuilder } from "./assignment";
 
 @Resolver()
 export class CourseResolver {

@@ -17,16 +17,13 @@ export enum UserRole {
 }
 
 registerEnumType(UserRole, {
-  name: "UserRole", // this one is mandatory
-
-  description: "user roles", // this one is optional
+  name: "UserRole",
+  description: "User roles",
 });
 
 @ObjectType()
 @Entity()
 export class Account extends BaseWithPrimary {
-  // [EntityRepositoryType]?: AccountRepository;
-
   @Authorized()
   @Field(() => String, { nullable: false, description: "Username used for logging in" })
   @Column({ nullable: false, unique: true })
