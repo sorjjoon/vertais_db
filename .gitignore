@@ -43,6 +43,6 @@ yarn-error.log*
 .vercel
 
 abitti_repo/*/
-secrets.ts
+secrets.txt
 
 fiddle.sql
