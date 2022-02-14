@@ -11,15 +11,21 @@ module.exports = [
     username: config.user,
     password: config.password,
     database: config.database,
+
     applicationName: "vertais, typeorm",
+
     dropSchema: false,
     synchronize: process.env.NODE_ENV !== "production",
+
     entities: [path.join(__dirname, "dist", "entities", "*.js")],
     migrationsTableName: "migrations",
     migrations: [path.join(__dirname, "dist", "migrations", "*.js")],
+
     cli: {
+      migrationsTableName: "migrations",
       migrationsDir: [path.join(__dirname, "dist", "migrations", "*.js")],
     },
-    ssl: { rejectUnauthorized: false, ssl: process.env.NODE_ENV === "production" },
+
+    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false, ssl: true } : false,
   },
 ];
