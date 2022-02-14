@@ -7,10 +7,10 @@ import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 
 @ObjectType()
 export class FieldError {
-  @Field()
+  @Field({ description: "A message describing the generated error (Safe to display to the user)" })
   message: string;
 
-  @Field()
+  @Field({ description: "The field which generated the message, described by message" })
   fieldName: string;
 }
 
@@ -18,14 +18,15 @@ export class FieldError {
 export class AccountResponse {
   @Field(() => [FieldError], {
     nullable: true,
-    description:
-      "What errors the user input contained (such as username taken, or password too short) and which field was invalid",
+    description: `What errors the user input contained (such as username taken, or password too short) and which fields caused the error.
+      Set to null, if no errors were found.
+      `,
   })
   errors?: FieldError[];
 
   @Field(() => Account, {
     nullable: true,
-    description: "If given input was valid, and saving the user was successfull. Otherwise null",
+    description: "Succesfully created user.",
   })
   user?: Account | null;
 }

@@ -25,7 +25,11 @@ registerEnumType(UserRole, {
 @Entity()
 export class Account extends BaseWithPrimary {
   @Authorized()
-  @Field(() => String, { nullable: false, description: "Username used for logging in" })
+  @Field(() => String, {
+    nullable: false,
+    description: `Username used for logging in.  
+      Attempting to request this field for any other user, except the currently authenticated one will end the request in an authorization error.`,
+  })
   @Column({ nullable: false, unique: true })
   username!: string;
 
@@ -50,20 +54,24 @@ export class Account extends BaseWithPrimary {
   email?: string;
 
   @Authorized()
-  @Field(() => [Course], { description: "Courses taught by the user" })
+  @Field(() => [Course], {
+    description: `Courses taught by the user.  
+  Attempting to request this field for any other user, except the currently authenticated one will end the request in an authorization error.`,
+  })
   @OneToMany(() => Course, (course) => course.owner)
   teachedCourses: Course[];
 
   @Authorized()
-  @Field(() => [CourseSignUp], { description: "Courses user has signed up as a student" })
+  @Field(() => [CourseSignUp], {
+    description: `Courses user has signed up as a student.  
+  Attempting to request this field for any other user, except the currently authenticated one will end the request in an authorization error.`,
+  })
   @OneToMany(() => CourseSignUp, (c) => c.student)
   signedUpCourses: CourseSignUp[];
 
-  @Authorized()
   @OneToMany(() => Comment, (c) => c.owner)
   comments: Comment[];
 
-  @Authorized()
   @OneToMany(() => FileDetails, (c) => c.owner)
   files: FileDetails[];
 

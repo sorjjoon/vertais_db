@@ -57,8 +57,6 @@ export class CourseResolver {
     @Arg("limit", () => Int, { nullable: true }) limit: number | Nullish,
     @Ctx() { user }: MyContext
   ): Promise<Course[]> {
-    // limit = Math.min(50, limit ?? 50);
-    // offset = offset ?? 0; .skip(offset).take(limit)
     const qb = getUserCoursesQuery(user?.id);
     qb.leftJoinAndSelect("course.assignments", "a");
     qb.leftJoinAndSelect("a.peerAssesment", "p");
@@ -68,13 +66,13 @@ export class CourseResolver {
   @Authorized()
   @Mutation(() => Course, { nullable: true })
   async generateDummyCourse(@Ctx() ctx: MyContext): Promise<Course | Nullish> {
-    if (ctx.user?.role === UserRole.STUDENT && __prod__) {
+    if (ctx.user?.role === UserRole.STUDENT && __PROD__) {
       return undefined;
     }
 
     const newCourse = new Course();
     newCourse.abbreviation = "ESIM";
-    newCourse.code = randomString(courseCodeLength);
+    newCourse.code = randomString(COURSE_CODE_LENGTH);
     newCourse.description =
       "Tämä on esimerkki kurssi, jossa voit katsella erilaisia tapoja luoda tehtäviä sivustolla.\nÄlä jaa tämän kurssin koodia opiskelijoille, vaan luo uusi kurssi oikeasta yläkulmasta";
     newCourse.name = "Esimerkki kurssi";
@@ -159,7 +157,7 @@ export class CourseResolver {
       abbreviation: abbreviation || undefined,
       owner: user,
       icon,
-      code: randomString(courseCodeLength),
+      code: randomString(COURSE_CODE_LENGTH),
       comments: [],
       assignments: [],
     });
@@ -214,7 +212,7 @@ export class CourseResolver {
     try {
       await c.save();
     } catch (err) {
-      if (err.code === SqlErrorCodes.UNIQUE_VIOLATION && err.constraint.includes("pkey")) {
+      if (err.code === PostgreSQLErrorCodes.UNIQUE_VIOLATION && err.constraint.includes("pkey")) {
         throw new UserError("Olet jo ilmoittautunut tälle kurssille");
       } else {
         throw err;

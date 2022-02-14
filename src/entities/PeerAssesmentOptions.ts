@@ -21,13 +21,16 @@ export class PeerAssesmentOptions {
   @Column({
     nullable: false,
     default: false,
-    comment: "If assessor / asessed pairs have been generated for this peer assesment",
+    comment: `If assessor / asessed pairs have been generated for this peer assesment.
+      If you want to check if the pairs have been generated already,  Check this flag instead of the pair count, because an assignment with no submits can have no pairs.`,
   })
   @Field(() => Boolean, {
     nullable: true,
-    description: "If assessor / asessed pairs have been generated for this peer assesment",
+    description: `If assessor / asessed pairs have been generated for this peer assesment.
+    If you want to check if the pairs have been generated already,  Check this flag instead of the pair count, because an assignment with no submits can have no pairs.`,
   })
   pairsHaveBeenGenerated?: boolean;
+
   @Column({
     nullable: false,
     default: false,

@@ -25,7 +25,10 @@ export class Assignment extends BaseWithOwner {
   course: Course;
 
   @Authorized()
-  @Field(() => [Task])
+  @Field(() => [Task], {
+    description:
+      "Tasks belonging to this assignment. Will always be a list, even for assignments only containing one task",
+  })
   @OneToMany(() => Task, (task) => task.assignment, { cascade: false, eager: true })
   tasks: Task[];
 

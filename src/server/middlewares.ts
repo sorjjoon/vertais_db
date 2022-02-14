@@ -77,20 +77,35 @@ export function ensurePeerAssesmentPairsAreGenerated(
         }
         const allSubmits = multiMap(peerAssement.assignment.tasks, (t) => t.submits);
         const allSubmitOwners = allSubmits.map((s) => s.owner);
-        const studentsWithSubmits = _.shuffle(_.uniqBy(allSubmitOwners, "id"));
+
+        // Shuffle the student array to ensure all pairings have an equal chance of occuring
+        // (not all permutations can be found with our method for a given array)
+        const shuffledStudentsWithSubmits = _.shuffle(_.uniqBy(allSubmitOwners, "id"));
+
         const newPairs: PeerAssesmentPair[] = [];
-        for (let i = 0; i < Math.min(peerAssement.options.peerAssesmentCount, studentsWithSubmits.length - 1); i++) {
-          let newPairing = [...studentsWithSubmits];
+
+        for (
+          let i = 0;
+          i < Math.min(peerAssement.options.peerAssesmentCount, shuffledStudentsWithSubmits.length - 1); //ensure we don't run out of possible student pairings
+          i++
+        ) {
+          let newPairing = [...shuffledStudentsWithSubmits];
+
+          // Shift all elements to the left i times (overflowing to the right as needed)
           for (let j = 0; j <= i; j++) {
             let a = newPairing.shift()!;
             newPairing.push(a);
           }
-          newPairing.forEach((student1, k) => {
-            const student2 = studentsWithSubmits[k];
+
+          // Matching each student on the shifted to the original array we can create unique pairings
+          newPairing.forEach((assessed, k) => {
+            const assessor = shuffledStudentsWithSubmits[k];
+
             const pair = new PeerAssesmentPair();
-            pair.assessed = student1;
-            pair.assessor = student2;
+            pair.assessed = assessed;
+            pair.assessor = assessor;
             pair.peerAssesmentAssignment = peerAssement;
+
             newPairs.push(pair);
           });
         }
@@ -103,8 +118,10 @@ export function ensurePeerAssesmentPairsAreGenerated(
         );
       });
     } catch (err) {
-      console.log("Serialization error, peer assesment data should be commited by another transaction?");
-      console.error(err);
+      if (err.code !== PostgreSQLErrorCodes.SERILALIZATION_FAILURE) {
+        // Something went wrong, throw the error
+        throw err;
+      }
     }
     context.peerAssesmentAssignment = await PeerAssesmentAssignment.findOneOrFail({
       relations: ["assignment"],

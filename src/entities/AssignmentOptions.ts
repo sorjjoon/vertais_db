@@ -15,11 +15,16 @@ export class AssignmentOptions {
   @Column({ nullable: false, default: false })
   hasPeerAssesment?: boolean;
 
-  @Field(() => Date)
+  @Field(() => Date, {
+    description: "When this field can be seen in queries by users who don not own this assignment.",
+  })
   @Column({ nullable: false, type: dateTimeColumnType })
   reveal: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, {
+    nullable: true,
+    description: "When this field can be seen in queries by users who don not own this assignment.",
+  })
   @Column({ nullable: true, type: dateTimeColumnType })
   deadline?: Date;
 }

@@ -17,7 +17,7 @@ export abstract class Base extends BaseEntity {
   @CreateDateColumn({ comment: "Created at, intialized by db", nullable: false, type: dateTimeColumnType })
   createdAt?: Date;
 
-  @Field(() => Date, { description: "Entity update date" })
+  @Field(() => Date, { description: "Entity update date. Will be set to entity creation date by default." })
   @UpdateDateColumn({
     comment: "Updated at, intialized by db",
     nullable: false,
@@ -33,7 +33,7 @@ export abstract class BaseWithPrimary extends Base {
     temp[key] = temp[key] ?? { id: parent.id };
   }
 
-  @Field(() => Int, { description: "Primary key" })
+  @Field(() => Int, { description: "Integer primary key" })
   @PrimaryGeneratedColumn({ comment: "Base primary key" })
   id: number;
 }

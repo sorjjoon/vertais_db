@@ -28,7 +28,12 @@ export class PeerAssesmentPair extends BaseWithPrimary {
   @ManyToOne(() => PeerAssesmentAssignment, { nullable: false, cascade: false, onDelete: "CASCADE" })
   peerAssesmentAssignment: PeerAssesmentAssignment;
 
-  @Field({ nullable: true })
+  @Field({
+    nullable: true,
+    description: `The points the student rewarded for this pairing. 
+  If this value is non null, the student has completed this peer assesment pairing
+  `,
+  })
   @Column({ nullable: true, type: "float" })
   points: number;
 
@@ -42,7 +47,8 @@ export class PeerAssesmentPair extends BaseWithPrimary {
 
   @Field(() => [Submit], {
     nullable: false,
-    description: "All the submits this student is supposed to give feedback for",
+    description: `All the submits this student is supposed to give feedback for this pairing. 
+      Each submit is for the same assignement, and by the same student, but for different tasks.`,
   })
   assessedSubmits: Submit[];
 

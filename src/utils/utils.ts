@@ -53,38 +53,6 @@ export function filterKeys<T>(
   return obj;
 }
 
-export function validUsername(username?: string, password?: string, password2?: string) {
-  const errors: FieldError[] = [];
-  if (username != null && username.length < minUsernameLength) {
-    errors.push({
-      fieldName: "username",
-      message: format("Käyttäjänimen täytyy olla vähintään %s merkkiä", minUsernameLength),
-    });
-  }
-  if (username != null && username.length > maxUsernameLength) {
-    errors.push({
-      fieldName: "username",
-      message: format("Käyttäjänimi saa olla enintään %s merkkiä", minUsernameLength),
-    });
-  }
-
-  if (password != null && password.length < minPasswordLength) {
-    errors.push({
-      fieldName: "password",
-      message: format("Salasanan täytyy olla vähintään %s merkkiä", minPasswordLength),
-    });
-  }
-  if (password != null && password.length > maxPasswordLength) {
-    errors.push({ fieldName: "password", message: format("Salasana saa olla enintään %s merkkiä", maxPasswordLength) });
-  }
-
-  if (password2 != null && password != password2) {
-    errors.push({ fieldName: "password", message: format("Salasanat eivät täsmää", password2) });
-  }
-
-  return errors;
-}
-
 export function loginUser(req: any, user: any) {
   req.session.userId = user.id;
   req.session.role = user.role;
