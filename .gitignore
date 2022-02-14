@@ -44,5 +44,5 @@ yarn-error.log*
 
 abitti_repo/*/
 secrets.txt
-
+**/secrets.txt
 fiddle.sql
