@@ -20,7 +20,6 @@ import {
   getUserQueriesSub,
   updateAnswer,
 } from "../utils/sql";
-import { multiMap } from "../utils/utils";
 import { InfoArgs, TaskInfo, UpcomingAssignmentsReturnType } from "./types";
 
 export function getCourseAssignmentsQueryBuilder(user: { id: number; role: string }, courseId?: number) {

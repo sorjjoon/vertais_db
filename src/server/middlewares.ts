@@ -4,7 +4,13 @@ import { getConnection } from "typeorm";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 import { MyContext, UserError } from "../types";
 import { multiMap } from "../utils/utils";
-import { UNAUTHORIZED_ACCESS_ERROR_MESSAGE, __prod__ } from "./constant";
+import {
+  PostgreSQLErrorCodes,
+  UNAUTHORIZED_ACCESS_ERROR_MESSAGE,
+  UNKNOWN_ERROR_MESSAGE,
+  __DEV__,
+  __PROD__,
+} from "./constant";
 import * as _ from "lodash";
 import { PeerAssesmentPair } from "../entities/PeerAssesmentPair";
 import console from "console";
@@ -21,11 +27,9 @@ export const ErrorInterceptor: MiddlewareFn<MyContext> = async ({ args, context,
       console.error("user", context.user);
       console.error("fieldName", info.fieldName);
       console.error("op", info.operation);
-      if (__prod__) {
-        throw new Error("Jokin meni pieleen, pahoittelumme");
+      if (__PROD__) {
+        throw new Error(UNKNOWN_ERROR_MESSAGE);
       }
-    } else if (!__prod__) {
-      console.error(err);
     }
     throw err;
   }
@@ -40,14 +44,18 @@ export function ensurePeerAssesmentPairsAreGenerated(
       console.log("Denying access to " + info.operation.name?.value);
       throw new UserError(UNAUTHORIZED_ACCESS_ERROR_MESSAGE);
     }
+
     var id = _.get(args, argsKey);
     if (!id && errorIfInvalidArgKey) {
       throw new Error(`argKey '${argsKey}' invalid`);
     }
+
     const peerAssesmentAssignment = await PeerAssesmentAssignment.findOne({
       relations: ["assignment", "assignment.tasks"],
       where: [{ id }],
     });
+
+    // Check if pairs have already been generated
     if (
       !peerAssesmentAssignment ||
       peerAssesmentAssignment.options.pairsHaveBeenGenerated ||

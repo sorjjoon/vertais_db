@@ -5,11 +5,6 @@ import { Session } from "express-session";
 import { Account } from "./entities/Account";
 import { Course } from "./entities/Course";
 import { PeerAssesmentAssignment } from "./entities/PeerAssesmentAssignment";
-export enum SqlErrorCodes {
-  UNIQUE_VIOLATION = "23505",
-  CHECK_VIOLATION = "23514",
-  SERILALIZATION_FAILURE = "40001",
-}
 
 export type MyContext = {
   req: Request & { session: Session };
@@ -28,7 +23,7 @@ declare module "express-session" {
 export class UserError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "KnownError";
+    this.name = "UserError";
   }
 }
 

@@ -5,7 +5,7 @@ require("source-map-support").install();
 import express from "express";
 import session from "express-session";
 import cors from "cors";
-import { COOKIE_NAME, __prod__ } from "./server/constant";
+import { COOKIE_NAME, FILE_UPLOAD_MAX_SIZE, SESSION_COOKIE_MAX_AGE_MS, __PROD__ } from "./server/constant";
 
 import { graphqlUploadExpress } from "graphql-upload";
 import { FileBlob } from "./entities/FileBlob";
@@ -42,8 +42,8 @@ const main = async () => {
     })
   );
 
-  app.use(express.json({ limit: __prod__ ? "20mb" : "7mb" }));
-  app.use(express.urlencoded({ limit: __prod__ ? "20mb" : "7mb", extended: true }));
+  app.use(express.json({ limit: __PROD__ ? "20mb" : "7mb" }));
+  app.use(express.urlencoded({ limit: __PROD__ ? "20mb" : "7mb", extended: true }));
 
   console.log("Typeorm init");
   const defaultConfig = await getConnectionOptions();
@@ -64,7 +64,7 @@ const main = async () => {
     session({
       rolling: false,
       cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000, //
+        maxAge: SESSION_COOKIE_MAX_AGE_MS, //
         httpOnly: true,
         secure: true,
         sameSite: "none",
@@ -78,7 +78,7 @@ const main = async () => {
   );
   console.log("Session config success");
   console.log("Configuring file upload");
-  app.use(graphqlUploadExpress({ maxFileSize: 100 * 1024 * 1024, maxFiles: 10 }));
+  app.use(graphqlUploadExpress({ maxFileSize: FILE_UPLOAD_MAX_SIZE, maxFiles: 10 }));
   console.log("Upload config success!");
 
   const apolloSever = await createApollo();

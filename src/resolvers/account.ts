@@ -1,23 +1,32 @@
 import "reflect-metadata";
 
-import { Resolver, Query, Ctx, Arg, Mutation, InputType, Field } from "type-graphql";
-import { MyContext, Nullish, SqlErrorCodes, UserError } from "../types";
+import { format } from "util";
+import { Resolver, Query, Ctx, Arg, Mutation, InputType, Field, Authorized } from "type-graphql";
+import { MyContext, Nullish, UserError } from "../types";
 import bcrypt from "bcrypt";
 import { Account, UserRole } from "../entities/Account";
-import { AccountResponse } from "./types";
-import { validUsername } from "../utils/utils";
-import { DOMAIN_NAME, PASSWORD_RESET_TOKEN_MAX_AGE } from "../server/constant";
+import { AccountResponse, FieldError } from "./types";
+import {
+  DOMAIN_NAME,
+  MAX_FIRSTNAME_OR_LASTNAME_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MAX_USERNAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  MIN_USERNAME_LENGTH,
+  PASSWORD_HASH_SALT_ROUNDS,
+  PASSWORD_RESET_TOKEN_MAX_AGE_MS,
+  PostgreSQLErrorCodes,
+  UNKNOWN_ERROR_MESSAGE,
+} from "../server/constant";
 import { sendMail } from "../utils/sendMail";
 import { randomBytes } from "crypto";
 import { PasswordResetToken } from "../entities/PasswordResetToken";
-import { MoreThanOrEqual } from "typeorm";
+import { getConnection, LessThan, MoreThan, MoreThanOrEqual } from "typeorm";
 import { logoutUser } from "../server/auth";
-
-const saltRounds = 10;
 
 function hashPassword(plainText: string) {
   return new Promise<string>((resolve, reject) => {
-    bcrypt.hash(plainText, saltRounds, (err, hash) => {
+    bcrypt.hash(plainText, PASSWORD_HASH_SALT_ROUNDS, (err, hash) => {
       if (err) {
         reject(err);
       } else {

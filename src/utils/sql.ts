@@ -9,14 +9,14 @@ import { Answer } from "../entities/Answer";
 import { Nullish } from "../types";
 import { FileTarget } from "../resolvers/types";
 
-interface subQueryOptions {
+interface SubQueryOptions {
   alias?: string;
   commentAlias?: string;
   joinComments?: boolean;
 }
 
 const defaults = { alias: "course", commentAlias: "comment", joinComments: true };
-export function getUserCoursesQuery(userId?: number, options?: subQueryOptions) {
+export function getUserCoursesQuery(userId?: number, options?: SubQueryOptions) {
   options = { ...defaults, ...options };
   const qb = Course.createQueryBuilder(options.alias).select();
 

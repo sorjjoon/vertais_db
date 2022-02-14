@@ -1,9 +1,8 @@
 import "reflect-metadata";
 
-import { MAX_LOG_MESSAGE_LENGTH, __prod__ } from "./server/constant";
+import { MAX_LOG_MESSAGE_LENGTH, PostgreSQLErrorCodes, __PROD__ } from "./server/constant";
 import { AdvancedConsoleLogger, QueryRunner } from "typeorm";
 
-import { SqlErrorCodes } from "./types";
 class CustomLogger extends AdvancedConsoleLogger {
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
     if (!query.includes('"session"')) {
@@ -12,7 +11,7 @@ class CustomLogger extends AdvancedConsoleLogger {
   }
 
   logQueryError(error: any, query: string, parameters?: any[], queryRunner?: QueryRunner) {
-    if (error.code !== SqlErrorCodes.UNIQUE_VIOLATION) {
+    if (error.code !== PostgreSQLErrorCodes.UNIQUE_VIOLATION) {
       super.logQueryError(error, query, mapParamsSafe(parameters), queryRunner);
     } else {
       console.log("\x1b[31m", error.message);

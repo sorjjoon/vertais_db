@@ -2,19 +2,18 @@ import "reflect-metadata";
 
 import { Course } from "../entities/Course";
 import { Resolver, Query, Ctx, Arg, Int, Mutation, Authorized } from "type-graphql";
-import { MyContext, Nullish, SqlErrorCodes, UserError } from "../types";
+import { MyContext, Nullish, UserError } from "../types";
 import { filterKeys, generateRandomRichText, nextYear, randomString, yesterday } from "../utils/utils";
 import { Account, UserRole } from "../entities/Account";
 import { CourseSignUp } from "../entities/CourseSignup";
 import { foreignKeysToDummyEntities, getUserCoursesQuery } from "../utils/sql";
-import { courseCodeLength } from "../utils/constant";
 import { getManager, In, Not } from "typeorm";
 import { sampleSize } from "lodash";
 import { Assignment } from "../entities/Assignment";
 import { Task } from "../entities/Task";
 import { Submit } from "../entities/Submit";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
-import { __prod__ } from "../server/constant";
+import { COURSE_CODE_LENGTH, PostgreSQLErrorCodes, __PROD__ } from "../server/constant";
 
 @Resolver()
 export class CourseResolver {

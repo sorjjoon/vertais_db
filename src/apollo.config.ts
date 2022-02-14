@@ -3,7 +3,7 @@ import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { Account } from "./entities/Account";
 import { customAuthChecker } from "./server/auth";
-import { __prod__ } from "./server/constant";
+import { __PROD__ } from "./server/constant";
 import { ErrorInterceptor } from "./server/middlewares";
 import { MyContext } from "./types";
 
@@ -18,7 +18,7 @@ export async function createApollo(opts: ApolloServerExpressConfig = {}) {
     },
     introspection: true,
     playground: {
-      title: (__prod__ ? "prod" : "dev") + " - vertais.fi playground",
+      title: (__PROD__ ? "prod" : "dev") + " - vertais.fi playground",
       settings: { "request.credentials": "include" },
     },
     schema: await buildSchema({
