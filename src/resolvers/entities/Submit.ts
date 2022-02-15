@@ -1,5 +1,4 @@
 import { Resolver, ResolverInterface, FieldResolver, Root, Ctx, Authorized } from "type-graphql";
-import { Grade } from "../../entities/Grade";
 import { Submit } from "../../entities/Submit";
 import { MyContext } from "../../types";
 import { sanitize } from "../../utils/sanitize";

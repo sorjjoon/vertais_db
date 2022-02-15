@@ -2,7 +2,7 @@ import { AuthenticationError } from "apollo-server-errors";
 import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { Account } from "./entities/Account";
-import { customAuthChecker } from "./server/auth";
+import { customAuthChecker } from "./server/authMiddlewares";
 import { __PROD__ } from "./server/constant";
 import { ErrorInterceptor } from "./server/middlewares";
 import { MyContext } from "./types";

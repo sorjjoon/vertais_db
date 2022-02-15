@@ -17,7 +17,7 @@ export const customAuthChecker: AuthChecker<MyContext> = ({ root, args, context,
   }
 
   if (context.user?.role === UserRole.DUMMY) {
-    console.log("DUMMY user able to login!", context.user);
+    console.log("DUMMY user was able to login!", context.user);
     logoutUser(context);
     throw new Error("Dummy user able to login!");
   }
@@ -131,7 +131,7 @@ export async function logoutUser({ res, req }: MyContext) {
         resolve(true);
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error in deleting cookie from session storage", err);
       reject(err);
     }
   });

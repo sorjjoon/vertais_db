@@ -16,13 +16,12 @@ import {
   PASSWORD_HASH_SALT_ROUNDS,
   PASSWORD_RESET_TOKEN_MAX_AGE_MS,
   PostgreSQLErrorCodes,
-  UNKNOWN_ERROR_MESSAGE,
 } from "../server/constant";
 import { sendMail } from "../utils/sendMail";
 import { randomBytes } from "crypto";
 import { PasswordResetToken } from "../entities/PasswordResetToken";
 import { getConnection, LessThan, MoreThan, MoreThanOrEqual } from "typeorm";
-import { logoutUser } from "../server/auth";
+import { logoutUser } from "../server/authMiddlewares";
 
 function hashPassword(plainText: string) {
   return new Promise<string>((resolve, reject) => {
@@ -206,19 +205,17 @@ export class AccountResolver {
 
   @Mutation(() => Boolean, {
     description: `Request a password reset token for user attached to this email.
-  Will raise an error, if you request attempt to request token for an email not related to any account.
+  Will raise an error, if you attempt to request token for an email not related to any account.
   Returns a boolean flag, indicating if sending the email was a success.
   `,
   })
-  async requestPasswordResetToken(
-    @Arg("email", { description: "Email attached to " }) email: string,
-    @Ctx() { req }: MyContext
-  ) {
+  async requestPasswordResetToken(@Arg("email", { description: "Email attached to " }) email: string) {
     let val = true;
     const user = await Account.findOne({ email });
     if (!user || !user.email) {
       throw new UserError("Antamasi sähköposti ei ole liitetty yhteenkään tiliin");
     }
+
     const expire = new Date(new Date().getTime() + PASSWORD_RESET_TOKEN_MAX_AGE_MS);
 
     console.log("Creating a password reset token for user: ", user.id);
@@ -256,9 +253,10 @@ export class AccountResolver {
 
     return val;
   }
+
   @Mutation(() => Boolean, {
-    description:
-      "Logout the currently authenticated user. Returns a boolean flag, indicating if there was an error attempting to log out the user.",
+    description: `Logout the currently authenticated user. 
+    Returns a boolean flag, indicating if there was an error attempting to log out the user.`,
   })
   async logout(@Ctx() ctx: MyContext): Promise<boolean> {
     return logoutUser(ctx);
@@ -275,13 +273,11 @@ export class AccountResolver {
     if (!user) {
       response.errors?.push({ fieldName: "username", message: "Käyttäjänimeä ei löydy" });
     }
-    if (!credentials.password) {
-      response.errors?.push({ fieldName: "password", message: "Väärä salasana" });
-    }
+
     if (response.errors?.length) {
       return response;
     }
-    const passwordIsValid = await comparePassword(credentials.password!, user!.password);
+    const passwordIsValid = await comparePassword(credentials.password ?? "", user!.password);
 
     if (!passwordIsValid) {
       response.errors?.push({ fieldName: "password", message: "Väärä salasana" });

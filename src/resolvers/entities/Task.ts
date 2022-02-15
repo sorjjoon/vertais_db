@@ -25,13 +25,4 @@ export class TaskResolver implements ResolverInterface<Task> {
       });
     }
   }
-
-  //   @FieldResolver()
-  //   async files(@Root() root: Task) {
-  //     const assig =
-  //       root.assignment ??
-  //       (await Task.findOneOrFail(root.id, { relations: ["assignment", "assignment.files"] })).assignment;
-  //     console.log(root);
-  //     return assig.files.concat(root.files);
-  //   }
 }

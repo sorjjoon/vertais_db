@@ -19,7 +19,7 @@ import { createApollo } from "./apollo.config";
 import compression from "compression";
 import { multiMap } from "./utils/utils";
 
-function httpAndHttpsUrls(domain: string) {
+function getHttpAndHttpsUrlsForDomain(domain: string) {
   return ["http://" + domain, "https://" + domain];
 }
 
@@ -27,20 +27,22 @@ const main = async () => {
   console.log("starting up");
 
   const app = express();
-  const port = parseInt(process.env.PORT!) || 5000;
+  const port = parseInt(process.env.PORT || "5000");
 
   console.log("Compression config");
   app.use(compression());
   console.log("Compression ok");
 
-  const corsDomains = multiMap(["vertais.fi", "www.vertais.fi", "localhost:3000"], httpAndHttpsUrls);
+  const corsDomains = multiMap(["vertais.fi", "www.vertais.fi", "localhost:3000"], getHttpAndHttpsUrlsForDomain);
 
+  console.log("CORS config");
   app.use(
     cors({
       origin: corsDomains,
       credentials: true,
     })
   );
+  console.log("CORS ok");
 
   app.use(express.json({ limit: __PROD__ ? "20mb" : "7mb" }));
   app.use(express.urlencoded({ limit: __PROD__ ? "20mb" : "7mb", extended: true }));
@@ -51,6 +53,7 @@ const main = async () => {
     console.error(err);
     throw err;
   });
+  console.log("Typeorm init ok");
 
   console.log("Configuring session");
   const repo = conn.getRepository(Session);
@@ -76,16 +79,15 @@ const main = async () => {
       store,
     })
   );
-  console.log("Session config success");
+  console.log("Session ok");
   console.log("Configuring file upload");
   app.use(graphqlUploadExpress({ maxFileSize: FILE_UPLOAD_MAX_SIZE, maxFiles: 10 }));
-  console.log("Upload config success!");
+  console.log("Upload ok");
 
+  console.log("Creating apollo");
   const apolloSever = await createApollo();
-
+  console.log("Apollo creation ok");
   apolloSever.applyMiddleware({ app, cors: false });
-
-  console.log("Cleaning session");
 
   app.get("/file/:id/:name", async (req, res) => {
     const qb = FileDetails.createQueryBuilder("de").select();

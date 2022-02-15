@@ -6,7 +6,7 @@ import { UserRole } from "../entities/Account";
 import { Feedback } from "../entities/Feedback";
 import { Grade } from "../entities/Grade";
 import { PeerAssesmentPair } from "../entities/PeerAssesmentPair";
-import { hasAccessToResource, Resource } from "../server/auth";
+import { hasAccessToResource, Resource } from "../server/authMiddlewares";
 import { MyContext } from "../types";
 import { deleteEntity, foreignKeysToDummyEntities } from "../utils/sql";
 

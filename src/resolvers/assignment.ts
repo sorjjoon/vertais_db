@@ -11,7 +11,7 @@ import { FileDetails } from "../entities/FileDetails";
 import { PeerAssesmentAssignment } from "../entities/PeerAssesmentAssignment";
 import { PeerAssesmentOptions } from "../entities/PeerAssesmentOptions";
 import { Task } from "../entities/Task";
-import { hasAccessToResource, Resource } from "../server/auth";
+import { hasAccessToResource, Resource } from "../server/authMiddlewares";
 import { MyContext, Nullish, UserError } from "../types";
 import {
   deleteEntity,

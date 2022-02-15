@@ -80,9 +80,7 @@ export function updateEntity<T extends EntityTarget<BaseWithOwner>>(
 ) {
   filterKeys(data);
   const qb = conn.createQueryBuilder().update(entity);
-  qb.set(data as any)
-    .where(where)
-    .returning("*");
+  qb.set(data).where(where).returning("*");
 
   return qb.execute();
 }
@@ -95,22 +93,23 @@ export function insertEntity<T extends EntityTarget<BaseWithOwner>>(entity: T, c
   return qb.execute();
 }
 
-export function foreignKeysToDummyEntities<T>(raw: T, depth = 1) {
-  if (depth <= 0) {
+export function foreignKeysToDummyEntities<T>(raw: T, maxDepth = 1) {
+  if (maxDepth <= 0) {
     return raw;
   }
   if (Array.isArray(raw)) {
-    raw.forEach((v) => foreignKeysToDummyEntities(v, depth));
+    raw.forEach((v) => foreignKeysToDummyEntities(v, maxDepth));
   } else {
-    for (let key in raw) {
+    let key: keyof typeof raw;
+    for (key in raw) {
       let newKey = key.slice(0, key.length - 2);
       let val = raw[key];
       if (key.endsWith("Id") && typeof val === "number" && (raw as any)[newKey] == undefined) {
         (raw as any)[newKey === "gradeSubmit" ? "grade" : newKey] = { id: val };
       } else if (val instanceof Base) {
-        foreignKeysToDummyEntities(val, depth - 1);
+        foreignKeysToDummyEntities(val, maxDepth - 1);
       } else if (Array.isArray(val)) {
-        val.forEach((v) => foreignKeysToDummyEntities(v, depth - 1));
+        val.forEach((v) => foreignKeysToDummyEntities(v, maxDepth - 1));
       }
     }
   }

@@ -26,7 +26,7 @@ export class AccountResponse {
 
   @Field(() => Account, {
     nullable: true,
-    description: "Succesfully created user.",
+    description: "The succesfully created or updated user.",
   })
   user?: Account | null;
 }
